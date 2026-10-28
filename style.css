@@ -97,7 +97,7 @@ input:focus,textarea:focus{outline:none;border-color:var(--accent);box-shadow:0 
 /* RESPONSIVE */
 @media(max-width:960px){.three{grid-template-columns:repeat(2,1fr)}.four{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:780px){
-  .burger{display:block}
+  .burger{display:block;margin-left:auto}
   .menu{position:absolute;top:68px;left:0;right:0;flex-direction:column;background:rgba(11,13,23,.97);padding:12px 4%;border-bottom:1px solid var(--line);display:none}
   .menu.open{display:flex}
   .hero-grid,.contact,.two,.three{grid-template-columns:1fr}

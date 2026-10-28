@@ -22,13 +22,30 @@
   const onScroll = () => {
     nav.classList.toggle('scrolled', scrollY > 30);
     top.classList.toggle('show', scrollY > 500);
+    // Last section (Contact) is short, so highlight it when scrolled to the bottom
+    if (innerHeight + scrollY >= document.documentElement.scrollHeight - 4) {
+      $$('.menu a').forEach(l => l.classList.toggle('active', l.getAttribute('href') === '#contact'));
+    }
   };
   addEventListener('scroll', onScroll, { passive: true }); onScroll();
   top.addEventListener('click', () => scrollTo({ top: 0, behavior: 'smooth' }));
 
   // Scroll reveal
+  // After the entrance animation ends, drop the reveal classes and delay so
+  // the cards' own hover transitions (lift, border, shadow) work normally.
+  const finishReveal = el => {
+    el.classList.remove('reveal', 'visible');
+    el.style.transitionDelay = '';
+  };
   const revealObs = new IntersectionObserver((entries, o) => {
-    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); o.unobserve(e.target); } });
+    entries.forEach(e => {
+      if (!e.isIntersecting) return;
+      const el = e.target;
+      el.classList.add('visible');
+      o.unobserve(el);
+      el.addEventListener('transitionend', ev => { if (ev.propertyName === 'opacity') finishReveal(el); }, { once: true });
+      setTimeout(() => finishReveal(el), 1500); // fallback if transitionend never fires
+    });
   }, { threshold: 0.12 });
   $$('.reveal').forEach((el, i) => { el.style.transitionDelay = (i % 4) * 80 + 'ms'; revealObs.observe(el); });
 
